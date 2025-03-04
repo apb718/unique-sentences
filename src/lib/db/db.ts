@@ -2,8 +2,7 @@
 import mysql from 'mysql2/promise';
 import {
 	DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT
-} from
-"$env/static/private";
+} from "$env/static/private";
 
 
 // Create a connection pool
