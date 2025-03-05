@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import { pool } from '$lib/db/db.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export const POST = async ({ request }) => {
 	console.log(`INFO: POST request received for sentence check`);
@@ -17,6 +16,13 @@ export const POST = async ({ request }) => {
 			name = "Unknown";
 		}
 
+		// Sentence validation regex
+		const sentencePattern = /^[a-zA-Z0-9\s+.,!?;:()'"-]+[!?.]$/;
+
+		if (!sentencePattern.test(sentence)) {
+			return json({ error: "Invalid sentence format. Sentences must end with a single punctuation mark (!, ?, or .)", valid: false }, { status: 400 });
+		}
+
 		// Check if the sentence exists in the database
 		const [results] = await pool.query(
 			'SELECT sentenceid, count, og_uploader_name FROM sentences WHERE sentence = ?',
@@ -29,7 +35,7 @@ export const POST = async ({ request }) => {
 				'INSERT INTO sentences (sentence, count, og_uploader_name) VALUES (?, ?, ?)',
 				[sentence, 1, name]
 			);
-			return json({ unique: true, count: 1, og_uploader_name: name });
+			return json({ unique: true, count: 1, og_uploader_name: name, valid: true });
 		} else {
 			// Sentence already exists, update the count
 			const { sentenceid, count, og_uploader_name } = results[0];
@@ -40,10 +46,9 @@ export const POST = async ({ request }) => {
 				[newCount, sentenceid]
 			);
 
-			return json({ unique: false, count: newCount, og_uploader_name });
+			return json({ unique: false, count: newCount, og_uploader_name, valid: true });
 		}
 	} catch (error) {
-		// @ts-ignore
 		console.error(`ERROR: ${error.message}`);
 		return json({ error: 'Internal Server Error' }, { status: 500 });
 	}

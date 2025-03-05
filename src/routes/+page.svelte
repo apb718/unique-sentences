@@ -25,7 +25,7 @@
 				result = data; // Store result for display
 			}
 		} catch (err) {
-			error = "Failed to check sentence. Please try again.";
+			error = err;
 			console.error("Error checking sentence:", err);
 		}
 	}
@@ -42,6 +42,9 @@
 				bind:value={sentence}
 				placeholder="Enter your sentence..."
 				class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-black bg-white"
+				minlength="2"
+				maxlength="256"
+				pattern="^[a-zA-Z0-9\s+.,!?;:()'\&quot;-]+[!?.].$"
 				required
 			>
 			<input
