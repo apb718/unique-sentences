@@ -32,8 +32,8 @@
 </script>
 
 <div class="flex flex-col items-center justify-center bg-gradient-to-b from-green-500 to-green-900 w-full min-h-screen p-4">
-	<div class="bg-gray-800 rounded-2xl p-10">
-		<div class="text-white text-lg mb-4 content-center">
+	<div class="bg-gray-800 rounded-2xl p-10 flex flex-col ">
+		<div class="text-white text-lg mb-4 content-center text-center">
 			Is my sentence unique???
 		</div>
 		<form on:submit={checkSentence} class="flex flex-col items-center space-y-4 w-full max-w-md">
